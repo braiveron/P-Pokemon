@@ -1,0 +1,54 @@
+.background {
+    height: 100%;
+    width: 100%;
+    background-image: url('../PokeImagenes/Bosque-Lumirinto.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow: hidden;
+    position: fixed;
+}
+
+.button {
+    font-family: poke;
+    text-decoration: none;
+    color: white;
+    display: flex;
+    margin-top: 20px;
+    height: 50px;
+    width: 50px;
+    border-radius: 50px;
+    border-color: black;
+    background-image: url('../PokeImagenes/Enter\ Button.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.button:hover{
+    cursor: pointer;
+    height: 75px;
+    width: 75px;
+    border-radius: 100px;
+    transition: all 1s ease;
+}
+
+.container {
+    height: 100px;
+    width: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    position: absolute;
+    bottom: 0px;
+}
+
+.Text {
+    color: white;
+    font-size: large;
+    font-weight: 100;
+    text-shadow: 25px 10px 25px rgba(255, 255, 255, 0.75), 25px 10px 25px rgba(255, 255, 255, 0.75);
+}
