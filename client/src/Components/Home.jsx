@@ -1,96 +1,158 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getPokemons } from "../Actions";
+import {
+  getPokemons,
+  getTypes,
+  reload,
+  orderByAbc,
+  filterByType,
+  orderByStrength,
+  filterApi,
+} from "../Actions/index";
 import { Link } from "react-router-dom";
-import loading from "../PokeImagenes/loading.gif";
 import Card from "./Card";
+import NavBar from "./NavBar";
+import Paginado from "./Paginado";
+import SearchBar from "./SearchBar";
+import loading from "../PokeImagenes/loading.gif";
+import "../Hojas-Estilo/Home.css";
 
 export default function Home() {
   const dispatch = useDispatch();
   const allPokemons = useSelector((state) => state.pokemons);
+  const allTypes = useSelector((state) => state.pokemonTypes);
 
-  function handleClick(e) {
-    e.preventDefault();
-    dispatch(getPokemons());
-  }
+  const [current, setCurrent] = useState(1);
+  const [pokemonsPage, setPokemonsPage] = useState(12);
+  const [order, setOrder] = useState("");
+  const ultimoPoke = current * pokemonsPage;
+  const primerPoke = ultimoPoke - pokemonsPage;
+  const pokes = allPokemons.slice(primerPoke, ultimoPoke);
+
+  const paginado = (pages) => {
+    setCurrent(pages);
+  };
+
+  useEffect(() => {
+    dispatch(getTypes());
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(getPokemons());
-  }, []);
+  }, [dispatch]);
+
+  function handleReload(e) {
+    e.preventDefault();
+    dispatch(reload(e));
+  }
+
+  function handleOrderByAbc(e) {
+    e.preventDefault();
+    dispatch(orderByAbc(e.target.value));
+    setCurrent(1);
+    setOrder(`Ordenado ${e.target.value}`);
+  }
+
+  function handleFilterType(e) {
+    e.preventDefault();
+    dispatch(filterByType(e.target.value));
+  }
+
+  function handleOrderByStrength(e) {
+    e.preventDefault();
+    dispatch(orderByStrength(e.target.value));
+    setCurrent(1);
+    setOrder(`Ordenado ${e.target.value}`);
+  }
+
+  function handleFilterApi(e) {
+    dispatch(filterApi(e.target.value));
+  }
 
   return (
-    <div>
-      <Link to="/pokemons">Crear Nuevo Pokemon</Link>
-      <h1>Aguante Pokemon</h1>
-      <button
-        onClick={(e) => {
-          handleClick(e);
-        }}
-      >
-        Volver a cargar los pokemons
-      </button>
-      <div>
-        {/* filtro para ordenar asc o desc por orden alfabetico */}
-        <select>
-          <option value="asc">Ascendente</option>
-          <option value="desc">Descendente</option>
-        </select>
-        {/* filtro por tipo */}
-        <select>
-          <option value="All">Todos</option>
-          <option value="Fairy">Fairy</option>
-          <option value="Dark">Dark</option>
-          <option value="Dragon">Dragon</option>
-          <option value="Flying">Flying</option>
-          <option value="Ghost">Ghost</option>
-          <option value="Grass">Grass</option>
-          <option value="Normal">Normal</option>
-          <option value="Poison">Poison</option>
-          <option value="Psychic">Psychic</option>
-          <option value="Electric">Electric</option>
-          <option value="Ice">Ice</option>
-          <option value="Bug">Bug</option>
-          <option value="Fire">Fire</option>
-          <option value="Ground">Ground</option>
-          <option value="Rock">Rock</option>
-        </select>
-        {/* filtro por creado por nosotros o existente*/}
-        <select>
-          <option value="All">Todos</option>
-          <option value="api">Existente</option>
-          <option value="created">Creados</option>
-        </select>
-        {/* filtro por ataque*/}
-        <select>
-          <option value="All">Todos</option>
-        </select>
+    <div className="container">
+      <div className="navBar">
+        <NavBar />
       </div>
-      <div>
-        {allPokemons?.map((p) => {
-          return (
-            <fragment>
-              <Link to={"/home/" + p.id}>
-                <Card
-                  id={p.id}
-                  name={p.name}
-                  hp={p.hp}
-                  attack={p.attack}
-                  defense={p.defense}
-                  speed={p.speed}
-                  height={p.height}
-                  weight={p.weight}
-                  image={p.image}
-                  types={p.types}
-                />
-              </Link>
-            </fragment>
-          );
-        })}
-        <div>
-          <p className="loading">Loading Pokemons...</p>
 
-          <img src={loading} alt="loading.gif" width="200px" height="200px" />
+      <div className="izquierda">
+        <SearchBar className="searchBar" />
+        <h4 className="text">
+          Crear Pokemon:
+          <Link to="/pokemons">
+            <button className="create" />
+          </Link>
+        </h4>
+        <Paginado
+          className="paginado"
+          pokemonsPage={pokemonsPage}
+          allPokemons={allPokemons.length}
+          paginado={paginado}
+        />
+        <div className="filters">
+          <select className="abcFilter" onChange={(e) => handleOrderByAbc(e)}>
+            <option value="All">Orden Alfabetico</option>
+            <option value="asc">A to Z</option>
+            <option value="desc">Z to A</option>
+          </select>
+          <br />
+          <select className="typesFilter" onChange={(e) => handleFilterType(e)}>
+            <option value="All">Tipos de Pokemon</option>
+            {allTypes?.map((t) => {
+              return (
+                <option value={t.name} key={t.id}>
+                  {t.name}
+                </option>
+              );
+            })}
+          </select>
+          <br />
+          <select
+            className="strengthFilter"
+            onChange={(e) => handleOrderByStrength(e)}
+          >
+            <option value="All">Fuerza</option>
+            <option value="powerfull">Poder</option>
+            <option value="weak">Debil</option>
+          </select>
+          <br />
+          <select className="apiFiltrer" onChange={(e) => handleFilterApi(e)}>
+            <option value="All">Existente o Creado</option>
+            <option value="api">Existente</option>
+            <option value="db">Creados</option>
+          </select>
+          <br />
+          <h4 className="text">
+            Recargar Pokemons:
+            <button className="reload" onClick={(e) => handleReload(e)} />
+          </h4>
         </div>
+      </div>
+
+      <div className="cards">
+        {pokes.length > 0 ? (
+          pokes.map((p) => {
+            return (
+              <Card
+                id={p.id}
+                name={p.name}
+                hp={p.hp}
+                attack={p.attack}
+                defense={p.defense}
+                speed={p.speed}
+                height={p.height}
+                weight={p.weight}
+                img={p.img}
+                types={p.types}
+              />
+            );
+          })
+        ) : (
+          <div>
+            <p className="loading">Esperando Pokemons...</p>
+            <img src={loading} alt="loading.gif" width="700px" height="250px" />
+          </div>
+        )}
       </div>
     </div>
   );

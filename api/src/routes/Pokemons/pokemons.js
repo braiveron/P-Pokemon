@@ -1,3 +1,4 @@
+const { default: axios } = require("axios");
 const { Router } = require("express");
 const { Pokemon, Type } = require("../../db");
 const router = Router();

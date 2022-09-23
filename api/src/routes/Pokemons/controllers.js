@@ -5,16 +5,14 @@ const { getAllPokemons } = require("./functions");
 const getPoke = async (req, res, next) => {
   try {
     const { name } = req.query;
-    let pokemonsTotal = await getAllPokemons();
     if (name) {
-      let pokemonName = pokemonsTotal.filter((el) =>
-        el.name.toLowerCase().includes(name.toLocaleLowerCase())
-      );
-      pokemonName.length
-        ? res.status(200).send(pokemonName)
-        : res.status(404).send("No se encuentra este Pokemon");
+      const allPokes = await nameSearch();
+      const poke = allPokes.find((p) => p.name === name);
+      if (poke) return res.status(200).json(poke);
+      return res.status(404).send("There is no pokemon with that name");
     } else {
-      res.status(200).send(pokemonsTotal);
+      const allPokes = await getAllPokemons();
+      return res.status(200).json(allPokes);
     }
   } catch (error) {
     next(error);

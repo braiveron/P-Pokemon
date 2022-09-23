@@ -1,17 +1,20 @@
 import "./App.css";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from "./Components/LandingPage";
 import Home from "./Components/Home";
+import PokemonCreate from "./Components/PokemonCreate";
+import Details from "./Components/Details";
 
 function App() {
   return (
     <BrowserRouter>
       <div className="App">
-        <Switch>
-          <Route exact path="/" component={LandingPage} />
-          <Route path="/home" component={Home} />
-        </Switch>
-        <h1>Henry Pokemon</h1>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/pokemons" element={<PokemonCreate />} />
+          <Route path="/pokemons/:id" element={<Details />} />
+        </Routes>
       </div>
     </BrowserRouter>
   );

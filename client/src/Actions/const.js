@@ -1,0 +1,11 @@
+export const RUTA_GET = "http://localhost:3001/pokemons";
+export const RUTA_TYPES = "http://localhost:3001/types";
+export const GET_POKEMON = "GET POKEMON";
+export const GET_POKEMONS = "GET POKEMONS";
+export const GET_TYPES = "GET TYPES";
+export const GET_DETAILS = "GET DETAILS";
+export const RELOAD = "RELOAD";
+export const ORDER_BY_ABC = "ORDER BY ABC";
+export const FILTER_BY_TYPE = "FILTER BY TYPE";
+export const ORDER_BY_STRENGTH = "ORDER BY STRENGTH";
+export const FILTER_API = "FILTER API";
